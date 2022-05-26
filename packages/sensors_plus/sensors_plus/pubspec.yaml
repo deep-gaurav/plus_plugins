@@ -20,8 +20,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  sensors_plus_web: ^1.1.0
-  sensors_plus_platform_interface: ^1.1.0
+  sensors_plus_platform_interface: 
+    path: ../sensors_plus_platform_interface
 
 dev_dependencies:
   test: ^1.16.4

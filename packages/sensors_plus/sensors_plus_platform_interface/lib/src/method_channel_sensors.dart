@@ -21,10 +21,28 @@ class MethodChannelSensors extends SensorsPlatform {
   static const EventChannel _magnetometerEventChannel =
       EventChannel('dev.fluttercommunity.plus/sensors/magnetometer');
 
+  static const EventChannel _disableChannel =
+      EventChannel('dev.fluttercommunity.plus/sensors/disabler');
+
+  static const EventChannel _enableChannel =
+      EventChannel('dev.fluttercommunity.plus/sensors/enabler');
+
   Stream<AccelerometerEvent>? _accelerometerEvents;
   Stream<GyroscopeEvent>? _gyroscopeEvents;
   Stream<UserAccelerometerEvent>? _userAccelerometerEvents;
   Stream<MagnetometerEvent>? _magnetometerEvents;
+
+  @override
+  disable() {
+    _disableChannel.binaryMessenger
+        .send('dev.fluttercommunity.plus/sensors/disabler', null);
+  }
+
+  @override
+  enable() {
+    _enableChannel.binaryMessenger
+        .send('dev.fluttercommunity.plus/sensors/enabler', null);
+  }
 
   /// A broadcast stream of events from the device accelerometer.
   @override

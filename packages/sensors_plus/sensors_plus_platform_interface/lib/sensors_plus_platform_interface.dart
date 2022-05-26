@@ -22,6 +22,10 @@ abstract class SensorsPlatform extends PlatformInterface {
   /// Constructs a SensorsPlatform.
   SensorsPlatform() : super(token: _token);
 
+  disable();
+
+  enable();
+
   static final Object _token = Object();
 
   static SensorsPlatform _instance = MethodChannelSensors();

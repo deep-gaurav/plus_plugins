@@ -35,17 +35,43 @@
       eventChannelWithName:@"dev.fluttercommunity.plus/sensors/magnetometer"
            binaryMessenger:[registrar messenger]];
   [magnetometerChannel setStreamHandler:magnetometerStreamHandler];
+    
+    
+    FLTSensorEnabler *enableHandler =
+        [[FLTSensorEnabler alloc] init];
+    FlutterEventChannel *enableChannel = [FlutterEventChannel
+        eventChannelWithName:@"dev.fluttercommunity.plus/sensors/enabler"
+             binaryMessenger:[registrar messenger]];
+    [enableChannel setStreamHandler:enableHandler];
+    
+    FLTSensorDisabler *disableHandler =
+        [[FLTSensorDisabler alloc] init];
+    FlutterEventChannel *disableChannel = [FlutterEventChannel
+        eventChannelWithName:@"dev.fluttercommunity.plus/sensors/disabler"
+             binaryMessenger:[registrar messenger]];
+    [disableChannel setStreamHandler:disableHandler];
 }
 
 @end
 
 const double GRAVITY = 9.8;
 CMMotionManager *_motionManager;
+bool receiveUpdates = true;
+
 
 void _initMotionManager() {
   if (!_motionManager) {
     _motionManager = [[CMMotionManager alloc] init];
   }
+}
+
+
+void disableSensor(){
+    receiveUpdates = false;
+}
+
+void enableSensor(){
+    receiveUpdates = true;
 }
 
 static void sendTriplet(Float64 x, Float64 y, Float64 z,
@@ -54,7 +80,10 @@ static void sendTriplet(Float64 x, Float64 y, Float64 z,
   [event appendBytes:&x length:sizeof(Float64)];
   [event appendBytes:&y length:sizeof(Float64)];
   [event appendBytes:&z length:sizeof(Float64)];
-  sink([FlutterStandardTypedData typedDataWithFloat64:event]);
+    if (receiveUpdates){
+        sink([FlutterStandardTypedData typedDataWithFloat64:event]);
+
+    }
 }
 
 @implementation FLTAccelerometerStreamHandlerPlus
@@ -150,6 +179,37 @@ static void sendTriplet(Float64 x, Float64 y, Float64 z,
 
 - (FlutterError *)onCancelWithArguments:(id)arguments {
   [_motionManager stopMagnetometerUpdates];
+  return nil;
+}
+
+@end
+
+
+@implementation FLTSensorEnabler
+
+- (FlutterError *)onListenWithArguments:(id)arguments
+                              eventSink:(FlutterEventSink)eventSink {
+    enableSensor();
+  return nil;
+}
+
+- (FlutterError *)onCancelWithArguments:(id)arguments {
+  
+  return nil;
+}
+
+@end
+
+@implementation FLTSensorDisabler
+
+- (FlutterError *)onListenWithArguments:(id)arguments
+                              eventSink:(FlutterEventSink)eventSink {
+    disableSensor();
+  return nil;
+}
+
+- (FlutterError *)onCancelWithArguments:(id)arguments {
+  
   return nil;
 }
 

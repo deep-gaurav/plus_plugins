@@ -36,4 +36,14 @@ class Sensors extends SensorsPlatform {
   Stream<MagnetometerEvent> get magnetometerEvents {
     return _platform.magnetometerEvents;
   }
+
+  @override
+  disable() {
+    _platform.disable();
+  }
+
+  @override
+  enable() {
+    _platform.enable();
+  }
 }

@@ -18,3 +18,9 @@
 
 @interface FLTMagnetometerStreamHandlerPlus : NSObject <FlutterStreamHandler>
 @end
+
+@interface FLTSensorEnabler : NSObject <FlutterStreamHandler>
+@end
+
+@interface FLTSensorDisabler : NSObject <FlutterStreamHandler>
+@end
